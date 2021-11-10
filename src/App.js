@@ -32,40 +32,6 @@ class BooksApp extends React.Component {
       newHash[bookId]=bookShelf;
     })
     this.setState({hash:newHash}) 
-import React from "react";
-import * as BooksAPI from './BooksAPI';
-import { ListBooks } from './ListBooks';
-import { SearchBooks } from "./SearchBooks";
-import { BrowserRouter as Router,Route,Routes} from 'react-router-dom';
-import './App.css';
-
-
-
-class BooksApp extends React.Component {
-  state = {
-    books:[], //current books available in the userList
-    shelfs:{ //books ordered according to shelfs
-      currentlyReading:[],
-      read:[],
-      wantToRead:[],
-    },
-    searchResults:[], // book results from search
-    hash:{}, //  hashmap for checking if the book from seach results in the list or not and getting it's state
-  }
-  /*
-  1-setHash function create hash map for books in the list 
-  2-it loops through the books array in the state 
-  3-for each book it add a new (id) property to the hash object in the state and set it equal to either ['currentlyReading','read','wantToRead'];
-  4-later hash map is used  for applying book state to search results!
-  */
-  setHash=(books)=>{
-    const newHash={};
-    books.forEach(book=>{
-      const bookId=book.id;
-      const bookShelf=book.shelf;
-      newHash[bookId]=bookShelf;
-    })
-    this.setState({hash:newHash}) 
   }
   /*
   1-In the Book component book.shelf property is used for setting the value of each book 
