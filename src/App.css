@@ -18,7 +18,7 @@ body, .app {
   font-weight: bold;
    display: flex;
   flex-wrap: wrap;
-  justify-content: center 
+  justify-content: center;
 }
 
 .list-books-title h1 {
@@ -28,6 +28,8 @@ body, .app {
   margin: 0;
   color: white;
   display: inline-block;
+  cursor: pointer;
+  user-select: none;
 
 }
 .list-books-link{
@@ -35,7 +37,13 @@ body, .app {
   color:white;
   font-size: 25px;
   margin-left: 20px;;
+  user-select: none;
+
 }
+.list-books-link-visited{
+  color:black !important;
+}
+
 .list-books-link:hover{
   color:rgb(8, 36, 8);
 }
@@ -68,7 +76,10 @@ body, .app {
   background-color: #4e9526;
   padding:5px;
   border-radius: 10px;
+  user-select: none;
+  cursor: pointer;
 }
+
 
 .bookshelf-books {
   text-align: center;
@@ -210,11 +221,16 @@ button:active {
   cursor: pointer;
 }
 
+
 /* book cover */
 
 .book-cover {
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
   background: #eee;
+  cursor: pointer;
+}
+.book-cover:hover{
+  opacity: .7;
 }
 
 .book-cover-title {

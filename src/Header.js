@@ -6,8 +6,8 @@ render(){
   return (
     <div className="list-books-title">
     <h1>{this.props.title}</h1>
-    <Link className="list-books-link" to='/'>Home</Link>
-    <Link className="list-books-link" to='/search'  onClick={this.props.clearResults} >Search</Link>
+    <Link className={`list-books-link ${window.location.pathname==='/'&&'list-books-link-visited'}`} to='/'>Home</Link>
+    <Link className={`list-books-link ${window.location.pathname==='/search'&&'list-books-link-visited'}`} to='/search'  onClick={this.props.clearResults} >Search</Link>
 
   </div>
   )
