@@ -57,7 +57,7 @@ class BooksApp extends React.Component {
   getBooks=()=>{
     BooksAPI.getAll().then(books=>{
       this.setState({
-        books:books,
+        books,
         shelfs:{
           currentlyReading:books.filter(book=>(book.shelf==='currentlyReading')),
           wantToRead:books.filter(book=>(book.shelf==='wantToRead')),
@@ -105,10 +105,18 @@ class BooksApp extends React.Component {
   3- components are rerendered with the new state
   */
   updateShelfs=(e,book)=>{
-
-    BooksAPI.update(book,e.target.value).then(result=>{
-      this.getBooks();
-    });
+    const newValue=e.target.value;
+    const previousValue=book.shelf;
+    this.setState((prevState=>{
+      const previousShelfs=prevState.shelfs;
+      previousShelfs[previousValue]=previousShelfs[previousValue].filter(b=>b.id!==book.id);
+      if(newValue!=='none'){
+        book.shelf=newValue;
+        previousShelfs[newValue].push(book);
+      }
+      return {shelf:previousShelfs};
+    }))
+    BooksAPI.update(book,e.target.value);
   }
   /*
   1-updateSearchShelfs is used to update book states in the search route
@@ -117,15 +125,24 @@ class BooksApp extends React.Component {
   */
   updateSearchShelfs=(e,book)=>{
     const newShelf=e.target.value;
+    const previousShelf=book.shelf||'none';
     BooksAPI.update(book,newShelf);
     this.setState((prevState)=>{
       const result=prevState.searchResults;
+      const shelfs=prevState.shelfs;
       result.forEach(b=>{
         if(b.id===book.id){
           b.shelf=newShelf;
         }
       });
-      return {searchResults:result}
+      if(previousShelf!=='none'){
+        shelfs[previousShelf].filter(b=>b.id!==book.id);
+      }
+      if(newShelf!=='none'){
+        book.shelf=newShelf;
+        shelfs[newShelf].push(book);
+      }
+      return {searchResults:result,shelfs}
     })
  
   }
@@ -142,7 +159,7 @@ class BooksApp extends React.Component {
       <div className="app">
         <Router>
         <Routes>
-        <Route path='/search' element={<SearchBooks getShelfs={this.getBooks} update={this.updateSearchShelfs} updateResults={this.updateResults} books={this.state.searchResults}/> }>
+        <Route path='/search' element={<SearchBooks clearResults={this.clearResults} getShelfs={this.getBooks} update={this.updateSearchShelfs} updateResults={this.updateResults} books={this.state.searchResults}/> }>
          
           </Route>
           <Route path='/' element={<ListBooks clearResults={this.clearResults} update={this.updateShelfs} read={this.state.shelfs.read} currentlyReading={this.state.shelfs.currentlyReading} wantToRead={this.state.shelfs.wantToRead}/>
