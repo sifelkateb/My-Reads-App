@@ -26,12 +26,17 @@ class BooksApp extends React.Component {
   */
   setHash=(books)=>{
     const newHash={};
-    books.forEach(book=>{
-      const bookId=book.id;
-      const bookShelf=book.shelf;
-      newHash[bookId]=bookShelf;
+    this.setState((prevState)=>{
+      const currentBooks=books||prevState.books;
+      console.log(currentBooks);
+      currentBooks.forEach(book=>{
+        const bookId=book.id;
+        const bookShelf=book.shelf;
+        newHash[bookId]=bookShelf;
+      })
+      return {hash:newHash}
     })
-    this.setState({hash:newHash}) 
+  
   }
   /*
   1-In the Book component book.shelf property is used for setting the value of each book 
@@ -109,13 +114,18 @@ class BooksApp extends React.Component {
     const previousValue=book.shelf;
     this.setState((prevState=>{
       const previousShelfs=prevState.shelfs;
+      let currentBooks=prevState.books;
       previousShelfs[previousValue]=previousShelfs[previousValue].filter(b=>b.id!==book.id);
+      currentBooks=currentBooks.filter(b=>b.id!==book.id);
       if(newValue!=='none'){
         book.shelf=newValue;
         previousShelfs[newValue].push(book);
+        currentBooks.push(book);
       }
-      return {shelf:previousShelfs};
+      console.log(currentBooks);
+      return {shelf:previousShelfs,books:currentBooks};
     }))
+    this.setHash();
     BooksAPI.update(book,e.target.value);
   }
   /*
@@ -130,21 +140,24 @@ class BooksApp extends React.Component {
     this.setState((prevState)=>{
       const result=prevState.searchResults;
       const shelfs=prevState.shelfs;
+      let currentBooks=prevState.books;
       result.forEach(b=>{
         if(b.id===book.id){
           b.shelf=newShelf;
         }
       });
       if(previousShelf!=='none'){
-        shelfs[previousShelf].filter(b=>b.id!==book.id);
+        shelfs[previousShelf]=shelfs[previousShelf].filter(b=>b.id!==book.id);
+        currentBooks=currentBooks.filter(b=>b.id!==book.id);
       }
       if(newShelf!=='none'){
         book.shelf=newShelf;
         shelfs[newShelf].push(book);
+        currentBooks.push(book);
       }
-      return {searchResults:result,shelfs}
-    })
- 
+      return {searchResults:result,shelfs,books:currentBooks}
+    });
+    this.setHash();
   }
   /*
   when the component is fired rendered componentDidMount is fired and all books are extracted from the server then 
@@ -159,7 +172,7 @@ class BooksApp extends React.Component {
       <div className="app">
         <Router>
         <Routes>
-        <Route path='/search' element={<SearchBooks clearResults={this.clearResults} getShelfs={this.getBooks} update={this.updateSearchShelfs} updateResults={this.updateResults} books={this.state.searchResults}/> }>
+        <Route path='/search' element={<SearchBooks clearResults={this.clearResults} update={this.updateSearchShelfs} updateResults={this.updateResults} books={this.state.searchResults}/> }>
          
           </Route>
           <Route path='/' element={<ListBooks clearResults={this.clearResults} update={this.updateShelfs} read={this.state.shelfs.read} currentlyReading={this.state.shelfs.currentlyReading} wantToRead={this.state.shelfs.wantToRead}/>
