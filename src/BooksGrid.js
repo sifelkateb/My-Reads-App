@@ -6,7 +6,7 @@ export class BooksGrid extends React.Component{
   return (
     <ol className="books-grid">
     {
-      books.map((book,i)=>(<Book key={i} book={book} update={this.props.update} />))
+      books.map(book=>(<Book key={book.id} book={book} update={this.props.update} />))
     }
     </ol>
   )
