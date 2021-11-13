@@ -126,11 +126,25 @@ class BooksApp extends React.Component {
     this.setHash();
     BooksAPI.update(book,e.target.value);
   }
+ // reference https://www.freecodecamp.org/news/javascript-debounce-example/
+/*
+1-a debouncing function with a default timeout value of 300 ms 
+2-the function accept another function as argument along with a timeout which defaults to 300!
+*/
+ debounce=(func, timeout = 300)=>{
+  let timer;
+  return (...args) => {
+    args[0].persist();
+    clearTimeout(timer);
+    timer = setTimeout(() => { func.apply(this, args); }, timeout);
+  };
+}
   /*
   1-updateSearchShelfs is used to update book states in the search route
   2-searchResults array is looped through 
   3- if the book id matched the book that fired the event new shelf is applied to that book
   */
+
   updateSearchShelfs=(e,book)=>{
     const newShelf=e.target.value;
     const previousShelf=book.shelf||'none';
@@ -166,11 +180,12 @@ class BooksApp extends React.Component {
   }
 
   render() {
+    const updateResults = this.debounce(this.updateResults);
     return (
       <div className="app">
         <Router>
         <Routes>
-        <Route path='/search' element={<SearchBooks clearResults={this.clearResults} update={this.updateSearchShelfs} updateResults={this.updateResults} books={this.state.searchResults}/> }>
+        <Route path='/search' element={<SearchBooks clearResults={this.clearResults} update={this.updateSearchShelfs} updateResults={updateResults} books={this.state.searchResults}/> }>
          
           </Route>
           <Route path='/' element={<ListBooks clearResults={this.clearResults} update={this.updateShelfs} read={this.state.shelfs.read} currentlyReading={this.state.shelfs.currentlyReading} wantToRead={this.state.shelfs.wantToRead}/>
