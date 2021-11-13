@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export class Book extends React.Component{
 
@@ -32,3 +33,8 @@ return (<li>
 }
 
 }
+Book.propTypes = {
+  update: PropTypes.func,
+  book: PropTypes.object,
+}
+ 

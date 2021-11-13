@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+
 
 export class Header extends React.Component{
 render(){
@@ -13,4 +15,8 @@ render(){
   )
 
 }
+}
+Header.propTypes={
+  title:PropTypes.string,
+  clearResults:PropTypes.func
 }

@@ -28,7 +28,6 @@ class BooksApp extends React.Component {
     const newHash={};
     this.setState((prevState)=>{
       const currentBooks=books||prevState.books;
-      console.log(currentBooks);
       currentBooks.forEach(book=>{
         const bookId=book.id;
         const bookShelf=book.shelf;
@@ -122,7 +121,6 @@ class BooksApp extends React.Component {
         previousShelfs[newValue].push(book);
         currentBooks.push(book);
       }
-      console.log(currentBooks);
       return {shelf:previousShelfs,books:currentBooks};
     }))
     this.setHash();
